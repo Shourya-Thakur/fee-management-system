@@ -34,9 +34,12 @@ The Fees Management System is a web application built to help students, accounta
 
 ```text
 fee-management-system/
-├── backend/
-│   ├── app.py
-│   └── requirements.txt
+backend/
+├── app.py
+├── requirements.txt
+├── schema.sql
+├── config.example.py
+└── db.example.py
 ├── frontend/
 │   ├── js/
 │   │   └── main.js
@@ -80,23 +83,27 @@ python -m pip install -r backend/requirements.txt
 ### 4. Configure MySQL
 
 1. Start your MySQL server.
-2. Create a database named `fee_management`.
-3. Open a terminal in the `backend` directory.
-4. Copy the example configuration files:
+2. From the project root, create the database tables using the schema file:
 
    ```bash
+   mysql -u root -p < backend/schema.sql
+   ```
+
+3. Create your local configuration files:
+
+   ```bash
+   cd backend
    cp config.example.py config.py
    cp db.example.py db.py
    ```
 
-5. Edit `config.py` and enter your local MySQL username and password.
-6. Return to the project root and install dependencies if you haven't already:
+4. Edit `config.py` and enter your local MySQL username and password.
+5. Return to the project root and activate your virtual environment if it is not already active.
 
-   ```bash
-   python -m pip install -r backend/requirements.txt
-   ```
+The `config.py` and `db.py` files are excluded from GitHub. Never commit real database credentials or private student information.
 
-The `config.py` and `db.py` files are excluded from GitHub. Never publish real database passwords or credentials.
+**Note:** The schema creates empty tables. Existing accounts, courses, payment requests, and activity logs are not included.
+
 
 ### 5. Run the backend
 

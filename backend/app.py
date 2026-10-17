@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db import get_connection
-import config
 
 def log_activity(action, performed_by, role):
     conn = get_connection()

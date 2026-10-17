@@ -1,0 +1,51 @@
+CREATE DATABASE IF NOT EXISTS fee_management
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_0900_ai_ci;
+
+USE fee_management;
+
+CREATE TABLE IF NOT EXISTS courses (
+    id INT NOT NULL AUTO_INCREMENT,
+    course_name VARCHAR(100) DEFAULT NULL,
+    total_fee INT DEFAULT NULL,
+    semesters INT DEFAULT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) DEFAULT NULL,
+    email VARCHAR(100) DEFAULT NULL,
+    password VARCHAR(100) DEFAULT NULL,
+    role VARCHAR(20) DEFAULT NULL,
+    course_id INT DEFAULT NULL,
+    PRIMARY KEY (id),
+    KEY course_id (course_id),
+    CONSTRAINT users_ibfk_1
+        FOREIGN KEY (course_id) REFERENCES courses (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS payment_requests (
+    id INT NOT NULL AUTO_INCREMENT,
+    student_email VARCHAR(100) DEFAULT NULL,
+    amount INT DEFAULT NULL,
+    payment_mode VARCHAR(20) DEFAULT NULL,
+    reference_no VARCHAR(100) DEFAULT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    date TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    action_time TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS activity_logs (
+    id INT NOT NULL AUTO_INCREMENT,
+    action VARCHAR(255) DEFAULT NULL,
+    performed_by VARCHAR(100) DEFAULT NULL,
+    role VARCHAR(50) DEFAULT NULL,
+    timestamp TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
