@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Accountant Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex">
+
+  <!-- Sidebar -->
+
+  <div class="w-64 bg-green-700 text-white min-h-screen p-5">
+    <h2 class="text-2xl font-bold mb-8">Accountant Panel</h2>
+    <ul>
+      <li class="mb-4 cursor-pointer" onclick="showSection('dashboard')">Dashboard</li>
+      <li class="mb-4 cursor-pointer" onclick="showSection('students')">Students</li>
+      <li class="mb-4 cursor-pointer" onclick="showSection('requests')">Payment Requests</li>
+      <li class="mb-4 cursor-pointer" onclick="showSection('defaulters')">Defaulters</li>
+      <li class="mt-10 cursor-pointer text-red-300" onclick="logout()">Logout</li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+
+  <div class="flex-1 p-6">
+
+
+<!-- ================= DASHBOARD ================= -->
+<div id="dashboard">
+
+  <!-- Cards -->
+  <div class="grid grid-cols-4 gap-6 mb-6">
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-gray-500 text-sm">Total Students</h3>
+    <p id="totalStudents" class="text-xl font-bold">0</p>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-gray-500 text-sm">Fees Expected</h3>
+    <p id="feesExpected" class="text-xl font-bold">₹0</p>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-gray-500 text-sm">Fees Collected</h3>
+    <p id="feesCollected" class="text-xl font-bold text-green-600">₹0</p>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-gray-500 text-sm">Fees Pending</h3>
+    <p id="feesPending" class="text-xl font-bold text-red-600">₹0</p>
+    <p id="pendingStudentsText" class="text-sm text-gray-500">(0 Students)</p>
+  </div>
+
+</div>
+
+  <!-- Pending Payment Requests -->
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="font-semibold mb-3">Pending Payment Requests (<span id="pendingCount">0</span>)</h3>
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+          <th>Email</th>
+          <th>Amount</th>
+          <th>Mode</th>
+          <th>Reference</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="dashboardPendingTable">
+      </tbody>
+
+    </table>
+  </div>
+
+</div>
+
+<!-- ================= STUDENTS ================= -->
+<div id="students" class="hidden">
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="font-semibold mb-3">Students</h3>
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+            <th>Email</th>
+            <th>Paid</th>
+            <th>Pending</th>
+            <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tbody id="studentsTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ================= PAYMENT REQUESTS ================= -->
+<div id="requests" class="hidden">
+
+<div class="grid grid-cols-3 gap-4 mb-6">
+
+  <div
+    class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-xl shadow hover:shadow-lg hover:-translate-y-1 transition">
+    <p class="text-gray-600">Pending</p>
+    <h2 id="pendingStats" class="text-3xl font-bold text-yellow-600">
+      0
+    </h2>
+  </div>
+
+  <div
+    class="bg-green-50 border-l-4 border-green-500 p-4 rounded-xl shadow hover:shadow-lg hover:-translate-y-1 transition">
+    <p class="text-gray-600">Approved</p>
+    <h2 id="approvedStats" class="text-3xl font-bold text-green-600">
+      0
+    </h2>
+  </div>
+
+  <div
+    class="bg-red-50 border-l-4 border-red-500 p-4 rounded-xl shadow hover:shadow-lg hover:-translate-y-1 transition">
+    <p class="text-gray-600">Rejected</p>
+    <h2 id="rejectedStats" class="text-3xl font-bold text-red-600">
+      0
+    </h2>
+  </div>
+
+</div>
+
+
+  <!-- Pending Review -->
+  <div class="bg-white p-4 rounded-xl shadow mb-6">
+    <h3 class="font-semibold mb-3">
+  Pending Review (<span id="pendingReviewCount">0</span>)
+</h3>
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+          <th>Email</th>
+          <!-- <th>Roll No</th> -->
+          <th>Amount</th>
+          <th>Mode</th>
+          <th>Reference</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="pendingRequestsTable"></tbody>
+    </table>
+  </div>
+
+  <!-- Processed -->
+  <div class="bg-white p-4 rounded-xl shadow">
+    <div class="flex justify-between items-center mb-1">
+
+    <h3 class="font-semibold">
+        Processed Requests
+        (<span id="processedCount">0</span>)
+    </h3>
+
+    <button
+        id="toggleProcessedBtn"
+        onclick="toggleProcessedRequests()"
+        class="text-blue-600 hover:text-blue-800 font-medium">
+        View All
+    </button>
+
+</div>
+
+    <p id="processedInfo"
+       class="text-sm text-gray-500 mb-3">
+      Showing latest 20 processed requests
+    </p>
+
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+          <th>Email</th>
+          <!-- <th>Roll No</th> -->
+          <th>Amount</th>
+          <th>Mode</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="processedRequestsTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ================= DEFAULTERS ================= -->
+<div id="defaulters" class="hidden">
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="font-semibold mb-2">Fee Defaulters</h3>
+    <p id="defaulterCountText" class="text-red-600 mb-4">
+  0 Students with pending fees
+</p>
+
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+            <th class="text-left">Email</th>
+            <th class="text-left">Paid</th>
+            <th class="text-left">Pending</th>
+        </tr>
+      </thead>
+      <tbody id="defaultersTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+
+  </div>
+
+</div>
+
+<script>
+function showSection(section){
+    const sections = ["dashboard", "students", "requests", "defaulters"];
+
+    sections.forEach(sec => {
+        const el = document.getElementById(sec);
+        if(el){
+            el.classList.add("hidden");
+        }
+    });
+
+    const active = document.getElementById(section);
+    if(active){
+        active.classList.remove("hidden");
+    }
+
+    if(section === "defaulters"){
+        loadDefaulters();
+    }
+
+    if(section === "students"){
+        loadStudents();
+    }
+
+}
+</script>
+
+
+<script src="js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex">
+
+  <!-- Sidebar -->
+
+  <div class="w-64 bg-purple-700 text-white min-h-screen p-5">
+    <h2 class="text-2xl font-bold mb-8">Admin Panel</h2>
+    <ul class="space-y-2">
+
+      <li id="nav-dashboard"
+          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition"
+          onclick="showSection('dashboard')">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+          Dashboard
+      </li>
+
+      <li id="nav-users"
+          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition"
+          onclick="showSection('users')">
+          <i data-lucide="users" class="w-5 h-5"></i>
+          User Management
+      </li>
+
+      <li id="nav-requests"
+          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition"
+          onclick="showSection('requests')">
+          <i data-lucide="credit-card" class="w-5 h-5"></i>
+          Payment Requests
+      </li>
+
+      <li id="nav-logs"
+          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition"
+          onclick="showSection('logs')">
+          <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+          Audit Logs
+      </li>
+
+      <li id="nav-fees"
+          class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition"
+          onclick="showSection('fees')">
+          <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+          Fee Structure
+      </li>
+
+      <li
+          class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-red-300 mt-8 hover:bg-white/10 transition"
+          onclick="logout()">
+          <i data-lucide="log-out" class="w-5 h-5"></i>
+          Logout
+      </li>
+
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+
+  <div class="flex-1 p-6">
+
+
+<!-- ================= DASHBOARD ================= -->
+<div id="dashboard">
+
+  <!-- Cards -->
+  <div class="grid grid-cols-5 gap-6 mb-6">
+
+  <!-- Total Users -->
+  <div class="bg-white p-5 rounded-2xl shadow border-t-4 border-blue-500 hover:shadow-xl hover:-translate-y-1 transition">
+    <div class="flex items-center gap-2 text-gray-500 text-sm">
+        <i data-lucide="users" class="w-5 h-5 text-blue-500"></i>
+        <span>Total Users</span>
+    </div>
+    <h2 id="totalUsers" class="text-4xl font-bold mt-2 text-blue-600">0</h2>
+  </div>
+
+  <!-- Students -->
+  <div class="bg-white p-5 rounded-2xl shadow border-t-4 border-purple-500 hover:shadow-xl hover:-translate-y-1 transition">
+    <div class="flex items-center gap-2 text-gray-500 text-sm">
+        <i data-lucide="graduation-cap" class="w-5 h-5 text-purple-500"></i>
+        <span>Students</span>
+    </div>
+    <h2 id="totalStudents" class="text-4xl font-bold mt-2 text-purple-600">0</h2>
+  </div>
+
+  <!-- Fees Expected -->
+  <div class="bg-white p-5 rounded-2xl shadow border-t-4 border-orange-500 hover:shadow-xl hover:-translate-y-1 transition">
+    <div class="flex items-center gap-2 text-gray-500 text-sm">
+        <i data-lucide="chart-column" class="w-5 h-5 text-orange-500"></i>
+        <span>Fees Expected</span>
+    </div>
+    <h2 id="feesExpected" class="text-3xl font-bold mt-2 text-orange-600">₹0</h2>
+  </div>
+
+  <!-- Fees Collected -->
+  <div class="bg-white p-5 rounded-2xl shadow border-t-4 border-green-500 hover:shadow-xl hover:-translate-y-1 transition">
+    <div class="flex items-center gap-2 text-gray-500 text-sm">
+        <i data-lucide="wallet" class="w-5 h-5 text-green-500"></i>
+        <span>Fees Collected</span>
+    </div>
+    <h2 id="feesCollected" class="text-3xl font-bold mt-2 text-green-600">₹0</h2>
+  </div>
+
+  <!-- Pending Fees -->
+  <div class="bg-white p-5 rounded-2xl shadow border-t-4 border-red-500 hover:shadow-xl hover:-translate-y-1 transition">
+    <div class="flex items-center gap-2 text-gray-500 text-sm">
+        <i data-lucide="triangle-alert" class="w-5 h-5 text-red-500"></i>
+        <span>Pending Fees</span>
+    </div>
+    <h2 id="feesPending" class="text-3xl font-bold mt-2 text-red-600">₹0</h2>
+    <p id="pendingStudentsAdmin" class="text-gray-500 font-medium text-sm mt-2">
+      (0 Students)
+    </p>
+  </div>
+
+</div>
+
+  <!-- Recent Activity -->
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="font-bold text-xl">Recent Activity</h3>
+
+    <button
+        onclick="showSection('logs')"
+        class="text-purple-600 hover:text-purple-800 font-medium">
+        View All →
+    </button>
+    <!-- 🔥 Dynamic Activity will come here -->
+    <div id="activityContainer"
+        class="space-y-1 max-h-[500px] overflow-y-auto">
+    </div>
+
+</div>
+
+</div>
+
+<!-- ================= USER MANAGEMENT ================= -->
+<div id="users" class="hidden">
+
+  <!-- TOP BAR -->
+  <div class="flex justify-between mb-6">
+    <h2 class="text-xl font-bold">Users</h2>
+    <button onclick="openAddUserModal()" 
+    class="bg-blue-600 text-white px-4 py-1 rounded">
+  + Add User
+</button>
+  </div>
+
+  <!-- 👨‍🎓 STUDENTS CARD -->
+  <div class="bg-white p-4 rounded-xl shadow mb-6">
+    <h3 class="text-lg font-semibold mb-4">Students</h3>
+
+    <table class="w-full">
+      <thead>
+        <tr class="border-b text-left">
+          <th>Name</th>
+          <th>Email</th>
+          <th>Course</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="studentsTableAdmin"></tbody>
+    </table>
+  </div>
+
+  <!-- 💼 ACCOUNTANTS CARD -->
+  <div class="bg-white p-4 rounded-xl shadow mb-6">
+    <h3 class="text-lg font-semibold mb-4">Accountants</h3>
+
+    <table class="w-full">
+      <thead>
+        <tr class="border-b text-left">
+          <th>Name</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="accountantsTableAdmin"></tbody>
+    </table>
+  </div>
+
+  <!-- 👑 ADMINS CARD -->
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-lg font-semibold mb-4">Admins</h3>
+
+    <table class="w-full">
+      <thead>
+        <tr class="border-b text-left">
+          <th>Name</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="adminsTableAdmin"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ================= PAYMENT REQUESTS ================= -->
+<div id="requests" class="hidden">
+
+<div class="grid grid-cols-3 gap-4 mb-6">
+
+  <div
+    class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-xl shadow hover:shadow-lg hover:-translate-y-1 transition">
+    <p class="text-gray-600">Pending</p>
+    <h2 id="pendingStats" class="text-3xl font-bold text-yellow-600">
+      0
+    </h2>
+  </div>
+
+  <div
+    class="bg-green-50 border-l-4 border-green-500 p-4 rounded-xl shadow hover:shadow-lg hover:-translate-y-1 transition">
+    <p class="text-gray-600">Approved</p>
+    <h2 id="approvedStats" class="text-3xl font-bold text-green-600">
+      0
+    </h2>
+  </div>
+
+  <div
+    class="bg-red-50 border-l-4 border-red-500 p-4 rounded-xl shadow hover:shadow-lg hover:-translate-y-1 transition">
+    <p class="text-gray-600">Rejected</p>
+    <h2 id="rejectedStats" class="text-3xl font-bold text-red-600">
+      0
+    </h2>
+  </div>
+
+</div>
+
+
+  <!-- Pending -->
+  <div class="bg-white p-4 rounded-xl shadow mb-6">
+    <h3 class="font-semibold mb-3">
+  Pending Review (<span id="pendingReviewCount">0</span>)
+</h3>
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+          <th>Email</th>
+          <!-- <th>Roll No</th> -->
+          <th>Amount</th>
+          <th>Mode</th>
+          <th>Reference</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="pendingRequestsTable"></tbody>
+    </table>
+  </div>
+
+  <!-- Processed -->
+  <div class="bg-white p-4 rounded-xl shadow">
+
+    <div class="flex justify-between items-center mb-1">
+
+    <h3 class="font-semibold">
+        Processed Requests
+        (<span id="processedCount">0</span>)
+    </h3>
+
+    <button
+        id="toggleProcessedBtn"
+        onclick="toggleProcessedRequests()"
+        class="text-blue-600 hover:text-blue-800 font-medium">
+        View All
+    </button>
+
+</div>
+
+    <p id="processedInfo"
+      class="text-sm text-gray-500 mb-3">
+      Showing latest 20 processed requests
+    </p>
+
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+          <th>Email</th>
+          <!-- <th>Roll No</th> -->
+          <th>Amount</th>
+          <th>Mode</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="processedRequestsTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ================= AUDIT LOGS ================= -->
+<div id="logs" class="hidden">
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="font-semibold mb-3">Audit Logs</h3>
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+          <th>Timestamp</th>
+          <th>Action</th>
+          <th>Performed By</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody id="auditLogsTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ================= FEE STRUCTURE ================= -->
+<div id="fees" class="hidden">
+
+  <div class="bg-white p-4 rounded-xl shadow mb-6">
+    <h3 class="font-semibold mb-3">Course & Fee Management</h3>
+
+    <h3 class="font-semibold mb-3">Add Course</h3>
+
+    <input id="courseName" type="text" placeholder="Course Name"
+        class="border p-2 mr-2 rounded">
+
+    <input id="courseFee" type="number" placeholder="Total Fee"
+    class="border p-2 mr-2 rounded">
+
+    <input id="courseSem" type="number" placeholder="Semesters"
+    class="border p-2 mr-2 rounded">
+
+    <button onclick="addCourse()"
+    class="bg-purple-600 text-white px-3 py-2 rounded">
+    Add
+    </button>
+
+    <hr class="my-4">
+
+    <h3 class="font-semibold mb-3">Courses</h3>
+
+    <table class="w-full">
+    <thead>
+        <tr class="border-b">
+        <th>Name</th>
+        <th>Total Fee</th>
+        <th>Semesters</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody id="courseTable"></tbody>
+    </table>
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="font-semibold mb-3">Payment Modes</h3>
+    <ul>
+      <li>Bank Challan</li>
+      <li>Cheque</li>
+    </ul>
+  </div>
+
+</div>
+
+
+  </div>
+
+</div>
+
+<script>
+
+function showSection(section){
+  document.querySelectorAll(".sidebar-item")
+  .forEach(item => {
+
+      item.classList.remove(
+        "bg-white",
+        "text-purple-700",
+        "font-semibold",
+        "shadow-lg"
+  );
+
+    item.classList.add("text-white");
+  });
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("users").classList.add("hidden");
+  document.getElementById("requests").classList.add("hidden");
+  document.getElementById("logs").classList.add("hidden");
+  document.getElementById("fees").classList.add("hidden");
+
+  document.getElementById(section).classList.remove("hidden");
+  if(section === "fees"){
+    loadCourses();
+  }
+
+  if(section === "users"){
+    fetchCourses();   // load courses first
+    setTimeout(loadUsers, 200);      // then users
+}
+
+if(section === "dashboard"){
+    loadAdminDashboard();
+    loadActivityLogs();
+}
+
+if(section === "requests"){
+    loadPendingRequests(); // 🔥 IMPORTANT
+}
+
+if(section === "logs"){
+    loadAuditLogs();
+}
+
+const activeNav = document.getElementById(`nav-${section}`);
+
+if(activeNav){
+
+    activeNav.classList.remove("text-white");
+
+    activeNav.classList.add(
+        "bg-white",
+        "text-purple-700",
+        "font-semibold",
+        "shadow-lg"
+    );
+
+}
+
+lucide.createIcons();
+}
+
+function logout(){
+  window.location.href = "login.html";
+}
+
+</script>
+<script src="js/main.js"></script>
+
+<!-- 🔥 ADD USER MODAL -->
+<div id="addUserModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+
+  <div class="bg-white p-6 rounded-xl shadow-lg w-96">
+
+    <h2 class="text-xl font-bold mb-4">Add New User</h2>
+
+    <input id="newName" type="text" placeholder="Name"
+      class="w-full border p-2 mb-3 rounded">
+
+    <input id="newEmail" type="email" placeholder="Email"
+      class="w-full border p-2 mb-3 rounded">
+
+    <input id="newPassword" type="password" placeholder="Password"
+      class="w-full border p-2 mb-3 rounded">
+
+    <select id="newRole" class="w-full border p-2 mb-4 rounded">
+      <option value="">Select Role</option>
+      <option value="student">Student</option>
+      <option value="accountant">Accountant</option>
+      <option value="admin">Admin</option>
+    </select>
+
+    <div class="flex justify-end gap-2">
+      <button onclick="closeAddUserModal()" 
+        class="px-3 py-1 bg-gray-400 text-white rounded">Cancel</button>
+
+      <button onclick="submitNewUser()" 
+        class="px-3 py-1 bg-blue-600 text-white rounded">Add</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="messageModal"
+    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+    <div class="bg-white rounded-2xl shadow-2xl p-6 w-[450px] transform transition-all duration-300">
+
+        <h2 id="modalTitle"
+            class="text-xl font-bold mb-4 text-red-600">
+            Message
+        </h2>
+
+        <div id="modalBody"
+            class="text-gray-700 whitespace-pre-line mb-6">
+        </div>
+
+        <div class="text-right">
+            <button
+              onclick="closeModal()"
+              class="bg-blue-600 hover:bg-blue-700 transition text-white px-5 py-2 rounded-lg">
+                OK
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div id="confirmModal"
+    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+    <div class="bg-white rounded-2xl shadow-2xl p-6 w-[450px]">
+
+        <h2 class="text-xl font-bold mb-4 text-red-600 flex items-center gap-2">
+             ⚠️ Delete Course
+        </h2>
+
+        <p id="confirmMessage" class="mb-6 text-gray-700">
+            Are you sure?
+        </p>
+
+        <div class="flex justify-end gap-3">
+
+            <button
+                onclick="closeConfirmModal()"
+                class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg">
+                Cancel
+            </button>
+
+            <button
+                id="confirmDeleteBtn"
+                class="bg-red-600 hover:bg-red-700 transition text-white px-5 py-2 rounded-lg shadow">
+                Delete
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+
+</body>
+</html>

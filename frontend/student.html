@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex">
+
+  <!-- Sidebar -->
+
+  <div class="w-64 bg-blue-700 text-white min-h-screen p-5">
+    <h2 class="text-2xl font-bold mb-8">Student Panel</h2>
+    <ul>
+      <li class="mb-4 cursor-pointer" onclick="showSection('dashboard')">Dashboard</li>
+      <li class="mb-4 cursor-pointer" onclick="showSection('submit')">Submit Payment</li>
+      <li class="mb-4 cursor-pointer" onclick="showSection('requests')">My Requests</li>
+      <li class="mb-4 cursor-pointer" onclick="showSection('transactions')">Transaction History</li>
+      <li class="mt-10 cursor-pointer text-red-300" onclick="logout()">Logout</li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+
+  <div class="flex-1 p-6">
+
+
+<!-- ================= DASHBOARD ================= -->
+<div id="dashboard">
+
+  <!-- Cards -->
+  <div class="grid grid-cols-4 gap-6 mb-6">
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3>Total Fee</h3>
+    <p id="totalFees" class="text-xl font-bold">₹0</p>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3>Paid</h3>
+    <p id="paidAmount" class="text-xl font-bold text-green-600">₹0</p>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3>Pending</h3>
+    <p id="pendingAmount" class="text-xl font-bold text-red-600">₹0</p>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3>Payment Requests</h3>
+    <p id="totalRequests" class="text-xl font-bold text-yellow-600">0</p>
+  </div>
+
+</div>
+
+  <!-- Recent Payment Requests -->
+  <div class="bg-white p-4 rounded-xl shadow mb-6">
+    <h3 class="font-semibold mb-3">Recent Payment Requests</h3>
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Mode</th>
+          <th>Ref No</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="recentRequestsTable"></tbody>
+    </table>
+  </div>
+
+  <!-- Approved Transactions -->
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="font-semibold mb-3">Approved Transactions</h3>
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Mode</th>
+        </tr>
+      </thead>
+      <tbody id="approvedTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ================= SUBMIT PAYMENT ================= -->
+<div id="submit" class="hidden">
+
+  <div class="bg-white p-6 rounded-xl shadow w-1/2">
+    <h3 class="text-xl font-semibold mb-4">Submit Payment</h3>
+
+    <p id="pendingBalance" class="text-red-600 font-semibold">
+  Pending Balance: ₹0
+</p>
+
+    <form id="paymentForm">
+      <input id="amount" type="number" placeholder="Enter Amount (₹)" class="w-full p-2 border rounded mb-4">
+
+      <select id="mode" class="w-full p-2 border rounded mb-4">
+        <option>Challan</option>
+        <option>Cheque</option>
+      </select>
+
+      <input id="reference" type="text" placeholder="Reference Number" class="w-full p-2 border rounded mb-4">
+
+      <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded">
+  Submit Request
+</button>
+    </form>
+  </div>
+
+</div>
+
+<!-- ================= MY REQUESTS ================= -->
+<div id="requests" class="hidden">
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-lg font-semibold mb-3">My Requests</h3>
+
+<input 
+  type="text" 
+  id="searchInput" 
+  placeholder="Search by Reference No..." 
+  class="mb-3 p-2 border rounded w-64"
+  onkeyup="searchRequests()"
+/>    
+
+<!-- ✅ ADD FILTER BUTTONS HERE -->
+<div class="mb-4 space-x-2">
+  <button onclick="filterRequests('all')" class="bg-gray-600 text-white px-3 py-1 rounded">All</button>
+  <button onclick="filterRequests('pending')" class="bg-yellow-500 text-white px-3 py-1 rounded">Pending</button>
+  <button onclick="filterRequests('approved')" class="bg-green-600 text-white px-3 py-1 rounded">Approved</button>
+  <button onclick="filterRequests('rejected')" class="bg-red-600 text-white px-3 py-1 rounded">Rejected</button>
+</div>
+
+<!-- ✅ YOUR TABLE -->
+<table class="w-full text-left">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Amount</th>
+      <th>Mode</th>
+      <th>Reference</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <!-- ✅ IMPORTANT -->
+  <tbody id="myRequestsTable"></tbody>
+</table>
+  </div>
+
+</div>
+
+<!-- ================= TRANSACTION HISTORY ================= -->
+<div id="transactions" class="hidden">
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="font-semibold mb-3">Transaction History</h3>
+    <table class="w-full">
+      <thead>
+  <tr class="border-b">
+    <th>Date</th>
+    <th>Amount</th>
+    <th>Mode</th>
+    <th>Status</th>
+    <th>Receipt</th>
+  </tr>
+</thead>
+      <tbody id="transactionHistoryTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+
+  </div>
+
+</div>
+
+<script>
+function showSection(section){
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("submit").classList.add("hidden");
+  document.getElementById("requests").classList.add("hidden");
+  document.getElementById("transactions").classList.add("hidden");
+
+  document.getElementById(section).classList.remove("hidden");
+  
+}
+
+function logout(){
+  window.location.href = "login.html";
+}
+</script>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>
