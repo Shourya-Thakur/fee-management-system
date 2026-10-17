@@ -81,10 +81,22 @@ python -m pip install -r backend/requirements.txt
 
 1. Start your MySQL server.
 2. Create a database named `fee_management`.
-3. Configure the database connection in your local `backend/db.py` file.
-4. Configure any additional settings required by `backend/config.py`.
+3. Open a terminal in the `backend` directory.
+4. Copy the example configuration files:
 
-These configuration files are excluded from the public repository. Set them up locally before starting the application, and never publish real database passwords or credentials.
+   ```bash
+   cp config.example.py config.py
+   cp db.example.py db.py
+   ```
+
+5. Edit `config.py` and enter your local MySQL username and password.
+6. Return to the project root and install dependencies if you haven't already:
+
+   ```bash
+   python -m pip install -r backend/requirements.txt
+   ```
+
+The `config.py` and `db.py` files are excluded from GitHub. Never publish real database passwords or credentials.
 
 ### 5. Run the backend
 
