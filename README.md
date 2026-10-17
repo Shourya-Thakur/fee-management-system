@@ -53,32 +53,61 @@ fee-management-system/
 
 ### Prerequisites
 
-Make sure you have the following installed:
-
 - Python 3
 - MySQL Server
 - Git
 
-### Installation
+### 1. Clone the repository
 
-1. Clone the repository:
+```bash
+git clone https://github.com/Shourya-Thakur/fee-management-system.git
+cd fee-management-system
+```
 
-   ```bash
-   git clone https://github.com/Shourya-Thakur/fee-management-system.git
-   cd fee-management-system
-   ```
+### 2. Create and activate a virtual environment
 
-2. Install the Python dependencies:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-   ```bash
-   pip install -r backend/requirements.txt
-   ```
+### 3. Install dependencies
 
-3. Configure your MySQL database and local database connection settings.
+```bash
+python -m pip install -r backend/requirements.txt
+```
 
-4. Start the Flask application using the appropriate command for your project configuration.
+### 4. Configure MySQL
 
-> **Note:** Database setup instructions and the exact application startup command can be added once the project configuration is documented.
+1. Start your MySQL server.
+2. Create a database named `fee_management`.
+3. Configure the database connection in your local `backend/db.py` file.
+4. Configure any additional settings required by `backend/config.py`.
+
+These configuration files are excluded from the public repository. Set them up locally before starting the application, and never publish real database passwords or credentials.
+
+### 5. Run the backend
+
+From the root project directory:
+
+```bash
+cd backend
+python app.py
+```
+
+The Flask application runs in debug mode for local development. Do not use debug mode in production.
+
+### 6. Open the frontend
+
+Open the appropriate HTML page in the `frontend` directory using your browser or a local web server.
+
+Ensure the frontend's API URL matches the address and port used by your Flask backend.
+
+## Troubleshooting
+
+- **Database connection errors:** Check that MySQL is running, the database exists, and your local connection settings are correct.
+- **Missing modules:** Activate your virtual environment and install the dependencies again.
+- **API errors:** Confirm that the Flask backend is running and the frontend uses the correct API URL.
 
 ## Security
 
